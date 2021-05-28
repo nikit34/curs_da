@@ -5,27 +5,27 @@ using namespace std;
 
 
 int main(int argc, char* argv[]) {
-    if (argc == 4) {
-        if(strcmp(argv[1], "classify")) {
-            if (strcmp(argv[2], "--stats")){
+    if (argc == 3) {
+        if(strcmp(argv[1], "classify") == 0) {
+            if (strcmp(argv[2], "--stats") == 0){
                 cout << "--stats" << endl;
-            } else if (strcmp(argv[2], "--input")){
+            } else if (strcmp(argv[2], "--input") == 0){
                 cout << "--input" << endl;
-            } else if (strcmp(argv[2], "--output")){
+            } else if (strcmp(argv[2], "--output") == 0){
                 cout << "--output" << endl;
             } else {
-                invalid_argument("invalud argiment");
+                throw invalid_argument("invalud argiment");
             }
-        } else if (strcmp(argv[1], "learn")){
-            if (strcmp(argv[2], "--input")){
+        } else if (strcmp(argv[1], "learn") == 0){
+            if (strcmp(argv[2], "--input") == 0){
                 cout << "--input" << endl;
-            } else if (strcmp(argv[2], "--output")){
+            } else if (strcmp(argv[2], "--output") == 0){
                 cout << "--output" << endl;
             } else {
-                invalid_argument("invalud argiment");
+                throw invalid_argument("invalud argiment");
             }
         } else {
-            invalid_argument("invalud argiment");
+            throw invalid_argument("invalud argiment");
         }
     } else {
         throw invalid_argument("invalud count argiments");
