@@ -1,4 +1,4 @@
-#include "docs_class.h"
+#include "learn.h"
 
 
 int main(int argc, char* argv[]) {
@@ -16,7 +16,7 @@ int main(int argc, char* argv[]) {
         } else if (strcmp(argv[1], "learn") == 0){
             if (strcmp(argv[2], "--input") == 0){
                 std::string name_file(argv[3]);
-                read_learn(name_file);
+                prepare_learn(name_file);
             } else if (strcmp(argv[2], "--output") == 0){
 
             } else {
