@@ -8,13 +8,12 @@
 
 
 struct class_statistic {
-    uint32_t count_outdoor; // Сколько раз этот класс встречался? (используется для приоритетов)
-    uint32_t total_words; // Сколько слов появилось для этого класса?
-    std::unordered_map<std::string, uint32_t> words; // Сколько раз встречали каждое слово для этого класса?
+    uint32_t count_outdoor; // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ? (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
+    uint32_t total_words; // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ?
+    std::unordered_map<std::string, uint32_t> words; // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ?
 };
 
-uint32_t total_trainings = 0;
-std::unordered_map<std::string, class_statistic> classes;
+
 
 void prepare_learn(std::string& name_file);
 inline void set_empty_input(uint32_t& num_line, std::vector<std::string>& tags, std::string& title, std::string& text);

@@ -1,5 +1,7 @@
 #include "learn.h"
 
+uint32_t TOTAL_TRAINING;
+std::unordered_map<std::string, class_statistic> CLASSES;
 
 inline void set_empty_input(uint32_t& num_line, std::vector<std::string>& tags, std::string& title, std::string& text) {
     num_line = 0;
@@ -69,10 +71,10 @@ void start_learn(std::vector<std::string>& tags, std::string& title, std::string
 
 void learn(std::string& text, std::string& cls) {
     class_statistic cls_stat;
-    //++total_trainings;
+    //++TOTAL_TRAINING;
 
-    if (classes.count(cls)) {
-        cls_stat = classes[cls];
+    if (CLASSES.count(cls)) {
+        cls_stat = CLASSES[cls];
     }
     else {
         cls_stat.count_outdoor = 0;
@@ -88,7 +90,7 @@ void learn(std::string& text, std::string& cls) {
         ++cls_stat.total_words;
     }
 
-    classes[cls] = cls_stat;
+    CLASSES[cls] = cls_stat;
 }
 
 std::string& classify(std::string& text) {
@@ -106,7 +108,7 @@ std::string& classify(std::string& text) {
     std::string name_class;
     class_statistic cls_stat;
 
-    for (auto& cls : classes) {
+    for (auto& cls : CLASSES) {
         name_class = cls.first;
         cls_stat = cls.second;
         laplace_smoothing = cls_stat.total_words;
@@ -117,7 +119,7 @@ std::string& classify(std::string& text) {
             }
         }
 
-        double metric_class = log(cls_stat.count_outdoor) - log(total_trainings);
+        double metric_class = log(cls_stat.count_outdoor) - log(TOTAL_TRAINING);
         std::string word;
         uint32_t count;
 
@@ -144,8 +146,8 @@ std::string& classify(std::string& text) {
 void write_statistic(std::string& name_file) {
     std::ofstream file;
     file.open(name_file);
-    //file << total_trainings;
-    for (auto& cls : classes) {
+    //file << TOTAL_TRAINING;
+    for (auto& cls : CLASSES) {
         file << cls.first;
     }
     file.close();
