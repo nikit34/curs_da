@@ -24,8 +24,7 @@ void get_tags(std::ifstream& file, std::string& line, std::vector<std::string>& 
         tags.push_back(token);
         line.erase(0, pos + 1);
     }
-    tags.push_back(token);
-    std::cout << token << std::endl;
+    tags.push_back(line);
 }
 
 inline void get_title(std::ifstream& file, std::string& title){
