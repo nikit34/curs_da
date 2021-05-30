@@ -61,5 +61,54 @@ void prepare_learn(std::string& name_file){
 }
 
 void start_learn(std::vector<std::string>& tags, std::string& title, std::string& text){
-    
+    for (auto& tag : tags) {
+        learn(title, tag);
+        learn(text, tag);
+    }
+}
+
+void learn(std::string& text, std::string& cls) {
+    class_statistic cls_stat;
+    ++total_trainings;
+
+    if (classes.count(cls)) {
+        cls_stat = classes[cls];
+    }
+    else {
+        cls_stat.count_outdoor = 0;
+        cls_stat.words.clear();
+    }
+
+    ++cls_stat.count_outdoor;
+
+    std::stringstream ss(text);
+    std::string token;
+    while (ss >> token) {
+        ++cls_stat.words[token];
+        ++cls_stat.total_words;
+    }
+
+    classes[cls] = cls_stat;
+}
+
+std::string& classify(std::string& text) {
+    std::unordered_map<std::string, uint32_t> word_counts;
+
+    std::stringstream ss(text);
+    std::string token;
+    while (ss >> token) {
+        ++word_counts[token];
+    }
+
+    double best = 0.0;
+    std::string best_class = "";
+    uint32_t laplace_smoothing;
+
+    for (auto& cls : classes) {
+        std::string name_class = cls.first;
+        class_statistic cls_stat = cls.second;
+        laplace_smoothing = cls_stat.total_words;
+
+        for(auto& )
+    }
 }
