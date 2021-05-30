@@ -9,12 +9,11 @@ void read_statistic(std::string& name_file){
     std::ifstream file;
     file.open(name_file);
     std::string line;
-
-    file >> TOTAL_TRAINING_CLASSIFY;
-
-    std::string tag;
     std::string tmp;
 
+    std::getline(file, tmp);
+    TOTAL_TRAINING_CLASSIFY = atoi(tmp.c_str());
+    std::string tag;
     while (std::getline(file, line)) {
         class_statistic cls_stat;
         get_token(line, tag);
@@ -86,13 +85,19 @@ void prepare_classify(std::string& name_file) {
 }
 
 void start_classify(std::string& title, std::string& text){
-    std::string res;
-    res = classify(title);
-    res += "," + classify(text);
-    RESULT.push_back(res);
+    std::string res_title;
+    classify(title, res_title);
+    std::string res_text;
+    classify(text, res_text);
+    if (res_title == res_text){
+        RESULT.push_back(res_text);
+    }
+    else {
+        RESULT.push_back(res_title + "," + res_text);
+    }
 }
 
-std::string& classify(std::string& text) {
+void classify(std::string& text, std::string& res) {
     std::unordered_map<std::string, uint32_t> word_counts;
 
     std::stringstream ss(text);
@@ -139,7 +144,7 @@ std::string& classify(std::string& text) {
             best_class = name_class;
         }
     }
-    return best_class;
+    res = best_class;
 }
 
 void write_result(std::string& name_file) {
