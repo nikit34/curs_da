@@ -3,6 +3,7 @@
 
 uint32_t TOTAL_TRAINING_CLASSIFY = 0;
 std::unordered_map<std::string, class_statistic> CLASSES_CLASSIFY;
+std::vector<std::string> RESULT;
 
 void read_statistic(std::string& name_file){
     std::ifstream file;
@@ -17,7 +18,6 @@ void read_statistic(std::string& name_file){
     while (std::getline(file, line)) {
         class_statistic cls_stat;
         get_token(line, tag);
-
 
         get_token(line, tmp);
         cls_stat.count_outdoor = atoi(tmp.c_str());
@@ -46,6 +46,7 @@ void get_tokens_words(std::string& line, std::unordered_map<std::string, uint32_
     std::string token;
     std::string word;
     uint32_t count;
+
     while ((pos_token = line.find(s_comma)) != std::string::npos) {
         token = line.substr(0, pos_token);
 
@@ -85,8 +86,10 @@ void prepare_classify(std::string& name_file) {
 }
 
 void start_classify(std::string& title, std::string& text){
-    classify(title);
-    classify(text);
+    std::string res;
+    res = classify(title);
+    res += "," + classify(text);
+    RESULT.push_back(res);
 }
 
 std::string& classify(std::string& text) {
@@ -105,7 +108,7 @@ std::string& classify(std::string& text) {
     class_statistic cls_stat;
 
     for (auto& cls : CLASSES_CLASSIFY) {
-        name_class = cls.first;  // TODO: read from file
+        name_class = cls.first;
         cls_stat = cls.second;
         laplace_smoothing = cls_stat.total_words;
 
@@ -136,6 +139,14 @@ std::string& classify(std::string& text) {
             best_class = name_class;
         }
     }
-    std::cout << best_class;
     return best_class;
+}
+
+void write_result(std::string& name_file) {
+    std::ofstream file;
+    file.open(name_file);
+    for (auto& res : RESULT) {
+        file << res << std::endl;
+    }
+    file.close();
 }

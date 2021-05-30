@@ -8,3 +8,4 @@ void set_empty_input_classify(uint32_t& num_line, std::string& title, std::strin
 void prepare_classify(std::string& name_file);
 void start_classify(std::string& title, std::string& text);
 std::string& classify(std::string& text);
+void write_result(std::string& name_file);

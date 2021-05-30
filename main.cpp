@@ -11,8 +11,9 @@ int main(int argc, char* argv[]) {
                 std::string name_stat_file(argv[3]);
                 read_statistic(name_stat_file);
                 name_input_file = argv[5];
-                // prepare_classify(name_input_file);
+                prepare_classify(name_input_file);
                 name_output_file = argv[7];
+                write_result(name_output_file);
             } else {
                 throw std::invalid_argument("invalud argiment");
             }
