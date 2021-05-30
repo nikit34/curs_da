@@ -69,7 +69,7 @@ void start_learn(std::vector<std::string>& tags, std::string& title, std::string
 
 void learn(std::string& text, std::string& cls) {
     class_statistic cls_stat;
-    ++total_trainings;
+    //++total_trainings;
 
     if (classes.count(cls)) {
         cls_stat = classes[cls];
@@ -103,12 +103,54 @@ std::string& classify(std::string& text) {
     double best = 0.0;
     std::string best_class = "";
     uint32_t laplace_smoothing;
+    std::string name_class;
+    class_statistic cls_stat;
 
     for (auto& cls : classes) {
-        std::string name_class = cls.first;
-        class_statistic cls_stat = cls.second;
+        name_class = cls.first;
+        cls_stat = cls.second;
         laplace_smoothing = cls_stat.total_words;
 
-        for(auto& )
+        for (auto& item_word_count : word_counts) {
+            if (!cls_stat.words.count(item_word_count.first)) {
+                ++laplace_smoothing;
+            }
+        }
+
+        double metric_class = log(cls_stat.count_outdoor) - log(total_trainings);
+        std::string word;
+        uint32_t count;
+
+        for (auto& item_word_count : word_counts) {
+            word = item_word_count.first;
+            count = item_word_count.second;
+
+            if (cls_stat.words.count(word)) {
+                //metric_class += count * (log(cls_stat.words[word]) - log(laplace_smoothing));
+            }
+            else {
+                metric_class += count * (-log(laplace_smoothing));
+            }
+        }
+
+        if (best_class == "" || (metric_class > best)) {
+            best = metric_class;
+            best_class = name_class;
+        }
     }
+    return best_class;
 }
+
+void write_statistic(std::string& name_file) {
+    std::ofstream file;
+    file.open(name_file);
+    //file << total_trainings;
+    for (auto& cls : classes) {
+        file << cls.first;
+    }
+    file.close();
+}
+
+//void prepare_classify(std::string& name_file) {
+//
+//}

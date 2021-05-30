@@ -13,7 +13,7 @@ struct class_statistic {
     std::unordered_map<std::string, uint32_t> words; // Сколько раз встречали каждое слово для этого класса?
 };
 
-uint32_t total_trainings;
+uint32_t total_trainings = 0;
 std::unordered_map<std::string, class_statistic> classes;
 
 void prepare_learn(std::string& name_file);
@@ -24,4 +24,7 @@ inline void get_title(std::ifstream& file, std::string& title);
 void get_text(std::ifstream& file, std::string& line, uint32_t& num_line, std::string& text);
 void start_learn(std::vector<std::string>& tags, std::string& title, std::string& text);
 void learn(std::string& text, std::string& cls);
+void write_statistic(std::string& name_file);
+
 std::string& classify(std::string& text);
+//void prepare_classify(std::string& name_file);
