@@ -1,7 +1,6 @@
 #include "learn.h"
 
 
-uint32_t TOTAL_TRAINING_LEARN = 0;
 std::unordered_map<std::string, class_statistic> CLASSES_LEARN;
 
 inline void set_empty_input_learn(uint32_t& num_line, std::vector<std::string>& tags, std::string& title, std::string& text) {
@@ -24,7 +23,7 @@ void get_tags(std::ifstream& file, std::string& line, std::vector<std::string>& 
     tags.push_back(line);
 }
 
-void prepare_learn(std::string& name_file){
+void prepare_learn(std::string& name_file, uint32_t& total_training_learn){
     uint32_t num_line;
     std::vector<std::string> tags;
     std::string title;
@@ -41,22 +40,22 @@ void prepare_learn(std::string& name_file){
             get_title(file, title);
             get_text(file, line, num_line, text);
 
-            start_learn(tags, title, text);
+            start_learn(tags, title, text, total_training_learn);
         }
         file.close();
     }
 }
 
-void start_learn(std::vector<std::string>& tags, std::string& title, std::string& text){
+void start_learn(std::vector<std::string>& tags, std::string& title, std::string& text, uint32_t& total_training_learn){
     for (auto& tag : tags) {
-        learn(title, tag);
-        learn(text, tag);
+        learn(title, tag, total_training_learn);
+        learn(text, tag, total_training_learn);
     }
 }
 
-void learn(std::string& text, std::string& cls) {
+void learn(std::string& text, std::string& cls, uint32_t& total_training_learn) {
     class_statistic cls_stat;
-    ++TOTAL_TRAINING_LEARN;
+    ++total_training_learn;
 
     if (CLASSES_LEARN.count(cls)) {
         cls_stat = CLASSES_LEARN[cls];
@@ -77,10 +76,10 @@ void learn(std::string& text, std::string& cls) {
     CLASSES_LEARN[cls] = cls_stat;
 }
 
-void write_statistic(std::string& name_file) {
+void write_statistic(std::string& name_file, uint32_t& total_training_learn) {
     std::ofstream file;
     file.open(name_file);
-    file << TOTAL_TRAINING_LEARN << std::endl;
+    file << total_training_learn << std::endl;
     for (auto& cls : CLASSES_LEARN) {
         file << cls.first;
         file << "," << cls.second.count_outdoor;

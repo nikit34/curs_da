@@ -20,9 +20,10 @@ int main(int argc, char* argv[]) {
         } else if (strcmp(argv[1], "learn") == 0){
             if (strcmp(argv[2], "--input") == 0 && strcmp(argv[4], "--output") == 0){
                 name_input_file = argv[3];
-                prepare_learn(name_input_file);
+                uint32_t total_training_learn = 0;
+                prepare_learn(name_input_file, total_training_learn);
                 name_output_file = argv[5];
-                write_statistic(name_output_file);
+                write_statistic(name_output_file, total_training_learn);
             } else {
                 throw std::invalid_argument("invalud argiment");
             }
