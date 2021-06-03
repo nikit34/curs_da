@@ -2,9 +2,9 @@
 
 
 
-std::unordered_map<std::string, class_statistic> CLASSES_CLASSIFY;
 
-void read_statistic(std::string& name_file, uint32_t& total_training_classify){
+
+void read_statistic(std::string& name_file, uint32_t& total_training_classify, std::unordered_map<std::string, class_statistic>& classes_classify){
     std::ifstream file;
     file.open(name_file);
     std::string line;
@@ -22,7 +22,7 @@ void read_statistic(std::string& name_file, uint32_t& total_training_classify){
         get_token(line, tmp);
         cls_stat.total_words = atoi(tmp.c_str());
         get_tokens_words(line, cls_stat.words);
-        CLASSES_CLASSIFY[tag] = cls_stat;
+        classes_classify[tag] = cls_stat;
     }
     file.close();
 }
@@ -63,7 +63,7 @@ void set_empty_input_classify(uint32_t& num_line, std::string& title, std::strin
     text = "";
 }
 
-void prepare_classify(std::string& name_file, uint32_t& total_training_classify, std::vector<std::string>& result) {
+void prepare_classify(std::string& name_file, uint32_t& total_training_classify, std::vector<std::string>& result, std::unordered_map<std::string, class_statistic>& classes_classify) {
     uint32_t num_line;
     std::string title;
     std::string text = "";
@@ -77,17 +77,17 @@ void prepare_classify(std::string& name_file, uint32_t& total_training_classify,
             get_title(file, title);
             get_text(file, line, num_line, text);
 
-            start_classify(title, text, total_training_classify, result);
+            start_classify(title, text, total_training_classify, result, classes_classify);
         }
         file.close();
     }
 }
 
-void start_classify(std::string& title, std::string& text, uint32_t& total_training_classify, std::vector<std::string>& result){
+void start_classify(std::string& title, std::string& text, uint32_t& total_training_classify, std::vector<std::string>& result, std::unordered_map<std::string, class_statistic>& classes_classify){
     std::string res_title;
-    classify(title, res_title, total_training_classify);
+    classify(title, res_title, total_training_classify, classes_classify);
     std::string res_text;
-    classify(text, res_text, total_training_classify);
+    classify(text, res_text, total_training_classify, classes_classify);
     if (res_title == res_text){
         result.push_back(res_text);
     }
@@ -96,7 +96,7 @@ void start_classify(std::string& title, std::string& text, uint32_t& total_train
     }
 }
 
-void classify(std::string& text, std::string& res, uint32_t& total_training_classify) {
+void classify(std::string& text, std::string& res, uint32_t& total_training_classify, std::unordered_map<std::string, class_statistic>& classes_classify) {
     std::unordered_map<std::string, uint32_t> word_counts;
 
     std::stringstream ss(text);
@@ -111,7 +111,7 @@ void classify(std::string& text, std::string& res, uint32_t& total_training_clas
     std::string name_class;
     class_statistic cls_stat;
 
-    for (auto& cls : CLASSES_CLASSIFY) {
+    for (auto& cls : classes_classify) {
         name_class = cls.first;
         cls_stat = cls.second;
         laplace_smoothing = cls_stat.total_words;

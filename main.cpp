@@ -14,9 +14,10 @@ int main(int argc, char* argv[]) {
 
                 uint32_t total_training_classify = 0;
                 std::vector<std::string> result;
+                std::unordered_map<std::string, class_statistic> classes_classify;
 
-                read_statistic(name_stat_file, total_training_classify);
-                prepare_classify(name_input_file, total_training_classify, result);
+                read_statistic(name_stat_file, total_training_classify, classes_classify);
+                prepare_classify(name_input_file, total_training_classify, result, classes_classify);
                 write_result(name_output_file, result);
             } else {
                 throw std::invalid_argument("invalud argiment");
@@ -28,7 +29,7 @@ int main(int argc, char* argv[]) {
 
                 uint32_t total_training_learn = 0;
                 std::unordered_map<std::string, class_statistic> classes_learn;
-                
+
                 prepare_learn(name_input_file, total_training_learn, classes_learn);
                 write_statistic(name_output_file, total_training_learn, classes_learn);
             } else {
