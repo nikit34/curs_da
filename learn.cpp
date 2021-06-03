@@ -1,8 +1,6 @@
 #include "learn.h"
 
 
-std::unordered_map<std::string, class_statistic> CLASSES_LEARN;
-
 inline void set_empty_input_learn(uint32_t& num_line, std::vector<std::string>& tags, std::string& title, std::string& text) {
     num_line = 0;
     tags.clear();
@@ -23,7 +21,7 @@ void get_tags(std::ifstream& file, std::string& line, std::vector<std::string>& 
     tags.push_back(line);
 }
 
-void prepare_learn(std::string& name_file, uint32_t& total_training_learn){
+void prepare_learn(std::string& name_file, uint32_t& total_training_learn, std::unordered_map<std::string, class_statistic>& classes_learn){
     uint32_t num_line;
     std::vector<std::string> tags;
     std::string title;
@@ -40,25 +38,25 @@ void prepare_learn(std::string& name_file, uint32_t& total_training_learn){
             get_title(file, title);
             get_text(file, line, num_line, text);
 
-            start_learn(tags, title, text, total_training_learn);
+            start_learn(tags, title, text, total_training_learn, classes_learn);
         }
         file.close();
     }
 }
 
-void start_learn(std::vector<std::string>& tags, std::string& title, std::string& text, uint32_t& total_training_learn){
+void start_learn(std::vector<std::string>& tags, std::string& title, std::string& text, uint32_t& total_training_learn, std::unordered_map<std::string, class_statistic>& classes_learn){
     for (auto& tag : tags) {
-        learn(title, tag, total_training_learn);
-        learn(text, tag, total_training_learn);
+        learn(title, tag, total_training_learn, classes_learn);
+        learn(text, tag, total_training_learn, classes_learn);
     }
 }
 
-void learn(std::string& text, std::string& cls, uint32_t& total_training_learn) {
+void learn(std::string& text, std::string& cls, uint32_t& total_training_learn, std::unordered_map<std::string, class_statistic>& classes_learn) {
     class_statistic cls_stat;
     ++total_training_learn;
 
-    if (CLASSES_LEARN.count(cls)) {
-        cls_stat = CLASSES_LEARN[cls];
+    if (classes_learn.count(cls)) {
+        cls_stat = classes_learn[cls];
     }
     else {
         cls_stat.count_outdoor = 0;
@@ -73,14 +71,14 @@ void learn(std::string& text, std::string& cls, uint32_t& total_training_learn) 
         ++cls_stat.words[token];
         ++cls_stat.total_words;
     }
-    CLASSES_LEARN[cls] = cls_stat;
+    classes_learn[cls] = cls_stat;
 }
 
-void write_statistic(std::string& name_file, uint32_t& total_training_learn) {
+void write_statistic(std::string& name_file, uint32_t& total_training_learn, std::unordered_map<std::string, class_statistic>& classes_learn) {
     std::ofstream file;
     file.open(name_file);
     file << total_training_learn << std::endl;
-    for (auto& cls : CLASSES_LEARN) {
+    for (auto& cls : classes_learn) {
         file << cls.first;
         file << "," << cls.second.count_outdoor;
         file << "," << cls.second.total_words;
