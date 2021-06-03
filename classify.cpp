@@ -1,18 +1,18 @@
 #include "classify.h"
 
 
-uint32_t TOTAL_TRAINING_CLASSIFY = 0;
+
 std::unordered_map<std::string, class_statistic> CLASSES_CLASSIFY;
 std::vector<std::string> RESULT;
 
-void read_statistic(std::string& name_file){
+void read_statistic(std::string& name_file, uint32_t& total_training_classify){
     std::ifstream file;
     file.open(name_file);
     std::string line;
     std::string tmp;
 
     std::getline(file, tmp);
-    TOTAL_TRAINING_CLASSIFY = atoi(tmp.c_str());
+    total_training_classify = atoi(tmp.c_str());
     std::string tag;
     while (std::getline(file, line)) {
         class_statistic cls_stat;
@@ -64,7 +64,7 @@ void set_empty_input_classify(uint32_t& num_line, std::string& title, std::strin
     text = "";
 }
 
-void prepare_classify(std::string& name_file) {
+void prepare_classify(std::string& name_file, uint32_t& total_training_classify) {
     uint32_t num_line;
     std::string title;
     std::string text = "";
@@ -78,17 +78,17 @@ void prepare_classify(std::string& name_file) {
             get_title(file, title);
             get_text(file, line, num_line, text);
 
-            start_classify(title, text);
+            start_classify(title, text, total_training_classify);
         }
         file.close();
     }
 }
 
-void start_classify(std::string& title, std::string& text){
+void start_classify(std::string& title, std::string& text, uint32_t& total_training_classify){
     std::string res_title;
-    classify(title, res_title);
+    classify(title, res_title, total_training_classify);
     std::string res_text;
-    classify(text, res_text);
+    classify(text, res_text, total_training_classify);
     if (res_title == res_text){
         RESULT.push_back(res_text);
     }
@@ -97,7 +97,7 @@ void start_classify(std::string& title, std::string& text){
     }
 }
 
-void classify(std::string& text, std::string& res) {
+void classify(std::string& text, std::string& res, uint32_t& total_training_classify) {
     std::unordered_map<std::string, uint32_t> word_counts;
 
     std::stringstream ss(text);
@@ -123,7 +123,7 @@ void classify(std::string& text, std::string& res) {
             }
         }
 
-        double metric_class = log(cls_stat.count_outdoor) - log(TOTAL_TRAINING_CLASSIFY);
+        double metric_class = log(cls_stat.count_outdoor) - log(total_training_classify);
         std::string word;
         uint32_t count;
 
