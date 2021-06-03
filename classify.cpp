@@ -3,7 +3,6 @@
 
 
 std::unordered_map<std::string, class_statistic> CLASSES_CLASSIFY;
-std::vector<std::string> RESULT;
 
 void read_statistic(std::string& name_file, uint32_t& total_training_classify){
     std::ifstream file;
@@ -64,7 +63,7 @@ void set_empty_input_classify(uint32_t& num_line, std::string& title, std::strin
     text = "";
 }
 
-void prepare_classify(std::string& name_file, uint32_t& total_training_classify) {
+void prepare_classify(std::string& name_file, uint32_t& total_training_classify, std::vector<std::string>& result) {
     uint32_t num_line;
     std::string title;
     std::string text = "";
@@ -78,22 +77,22 @@ void prepare_classify(std::string& name_file, uint32_t& total_training_classify)
             get_title(file, title);
             get_text(file, line, num_line, text);
 
-            start_classify(title, text, total_training_classify);
+            start_classify(title, text, total_training_classify, result);
         }
         file.close();
     }
 }
 
-void start_classify(std::string& title, std::string& text, uint32_t& total_training_classify){
+void start_classify(std::string& title, std::string& text, uint32_t& total_training_classify, std::vector<std::string>& result){
     std::string res_title;
     classify(title, res_title, total_training_classify);
     std::string res_text;
     classify(text, res_text, total_training_classify);
     if (res_title == res_text){
-        RESULT.push_back(res_text);
+        result.push_back(res_text);
     }
     else {
-        RESULT.push_back(res_title + "," + res_text);
+        result.push_back(res_title + "," + res_text);
     }
 }
 
@@ -147,10 +146,10 @@ void classify(std::string& text, std::string& res, uint32_t& total_training_clas
     res = best_class;
 }
 
-void write_result(std::string& name_file) {
+void write_result(std::string& name_file, std::vector<std::string>& result) {
     std::ofstream file;
     file.open(name_file);
-    for (auto& res : RESULT) {
+    for (auto& res : result) {
         file << res << std::endl;
     }
     file.close();

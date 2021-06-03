@@ -8,23 +8,28 @@ int main(int argc, char* argv[]) {
         std::string name_output_file;
         if(strcmp(argv[1], "classify") == 0) {
             if (strcmp(argv[2], "--stats") == 0 && strcmp(argv[4], "--input") == 0 && strcmp(argv[6], "--output") == 0){
-                uint32_t total_training_classify = 0;
                 std::string name_stat_file(argv[3]);
-                read_statistic(name_stat_file, total_training_classify);
                 name_input_file = argv[5];
-                prepare_classify(name_input_file, total_training_classify);
                 name_output_file = argv[7];
-                write_result(name_output_file);
+
+                uint32_t total_training_classify = 0;
+                std::vector<std::string> result;
+
+                read_statistic(name_stat_file, total_training_classify);
+                prepare_classify(name_input_file, total_training_classify, result);
+                write_result(name_output_file, result);
             } else {
                 throw std::invalid_argument("invalud argiment");
             }
         } else if (strcmp(argv[1], "learn") == 0){
             if (strcmp(argv[2], "--input") == 0 && strcmp(argv[4], "--output") == 0){
                 name_input_file = argv[3];
+                name_output_file = argv[5];
+
                 uint32_t total_training_learn = 0;
                 std::unordered_map<std::string, class_statistic> classes_learn;
+                
                 prepare_learn(name_input_file, total_training_learn, classes_learn);
-                name_output_file = argv[5];
                 write_statistic(name_output_file, total_training_learn, classes_learn);
             } else {
                 throw std::invalid_argument("invalud argiment");
